@@ -1,21 +1,34 @@
+import kotlin.math.abs
+
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.size
+        // Unzip the input list into the two sides of the list.
+        val (leftLList, rightList) = input.unzipInput()
+
+        // Sort and zip them together so we can compare.
+        return leftLList.sorted().zip(rightList.sorted())
+            .sumOf { (left, right) -> abs(left - right) }
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        // Unzip the input list into the two sides of the list.
+        val (leftLList, rightList) = input.unzipInput()
+
+        // Sum the values of the left list times the count of itself in the right list.
+        return leftLList.sumOf { left -> left * rightList.count(left::equals) }
     }
-
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
+
     part1(input).println()
     part2(input).println()
 }
+
+/** Unzips the list of string into two the list of left and right columns. */
+private fun List<String>.unzipInput(): Pair<List<Int>, List<Int>> = map {
+    // Separating the left and right inputs.
+    // Input is separated by "   ".
+    val (left, right) = it.split("   ")
+    left.toInt() to right.toInt()
+}.unzip()  // Unzip to split the pairs
